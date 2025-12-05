@@ -1,7 +1,4 @@
 ## 导入程序包
-import Pkg
-Pkg.activate(joinpath(@__DIR__, ".."))
-
 push!(LOAD_PATH, joinpath(@__DIR__, ".."))
 push!(LOAD_PATH, joinpath(@__DIR__, "../../MoM_Basics.jl"))
 push!(LOAD_PATH, joinpath(@__DIR__, "../../MoM_Kernels.jl"))
@@ -52,24 +49,19 @@ println("Found $(length(triangles)) triangles.")
 
 # 4. Define Source
 # PlaneWave(θ, ϕ, α, V)
-# θ, ϕ are incident angles (spherical coordinates)
-# α is polarization angle
-# V is amplitude
 source = PlaneWave(π/2, 0, 0f0, 1f0)
 
 # 5. Extract Fields
-println("Extracting [r, E(r), H(r)]...")
-
-# Use built-in function from MoM_Basics
-# calExcitationFields returns ExcitationFieldData
-# saveExcitationFields saves directly to file
-
+println("Extracting [r, E(r), H(r)] and saving to NPZ...")
 
 output_file = "excitation_fields.npz"
 saveExcitationFields(output_file, triangles, source)
 
 println("Extraction complete. Data saved to $output_file")
 
-import Pkg
-npz_pkg = [p for p in values(Pkg.dependencies()) if p.name == "NPZ"][1]
-println("NPZ version: $(npz_pkg.version)")
+# Verify the file exists
+if isfile(output_file)
+    println("Verified: $output_file exists.")
+else
+    println("Error: $output_file was not created.")
+end
